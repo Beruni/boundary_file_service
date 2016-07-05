@@ -4,10 +4,12 @@
   "description": "Boundary file service for Beruni.",
   "main": "app.js",
   "scripts": {
+    "clean": "rm -rf dist",
+    "build:dir": "mkdir -p ./dist/js",
     "test": "echo '=> running tests' && ./node_modules/.bin/jasmine-node spec && echo '=> tests passed'",
     "minify:js": "echo '=> minify:js' && uglifyjs ./*.js -o ./dist/js/app.min.js --source-map ./dist/js/app.js.map && echo '=> minify:js completed'",
     "start": "node ./dist/js/app.min.js",
-    "build": "npm run test && npm run minify:js && npm start"
+    "build": "echo 'Running build....' && npm run clean && npm run build:dir && npm run test && npm run minify:js"
   },
   "repository": {
     "type": "git",
