@@ -1,0 +1,1 @@
+{"version":3,"sources":["./app.js"],"names":["express","require","app","get","request","response","writeHead","Content-Type","end","listen"],"mappings":"AAAA,GAAIA,SAAUC,QAAQ,UAEtB,IAAIC,KAAMF,SAEVE,KAAIC,IAAI,QAAS,SAASC,QAASC,UACjCA,SAASC,UAAU,KAAMC,eAAiB,cAC1CF,UAASG,IAAI,SAGfN,KAAIO,OAAO","file":"./dist/js/app.min.js"}

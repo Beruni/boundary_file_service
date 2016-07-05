@@ -4,7 +4,10 @@
   "description": "Boundary file service for Beruni.",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/.bin/jasmine-node spec"
+    "test": "echo '=> running tests' && ./node_modules/.bin/jasmine-node spec && echo '=> tests passed'",
+    "minify:js": "echo '=> minify:js' && uglifyjs ./*.js -o ./dist/js/app.min.js --source-map ./dist/js/app.js.map && echo '=> minify:js completed'",
+    "start": "node ./dist/js/app.min.js",
+    "build": "npm run test && npm run minify:js && npm start"
   },
   "repository": {
     "type": "git",
@@ -17,6 +20,8 @@
     "mongodb": "^2.1.18"
   },
   "devDependencies": {
-    "jasmine-node": "^1.14.5"
+    "http-server": "^0.9.0",
+    "jasmine-node": "^1.14.5",
+    "uglify-js": "^2.7.0"
   }
 }
