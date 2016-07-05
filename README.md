@@ -9,7 +9,7 @@ How To Setup
 1. install all dependencies :
  npm install
 2. to run app :
-node app.js
+ node app.js
 3. Your app will be running on port 3000.
 4. Check it by making a GET request to localhost:3000/ping. The response should be 'Pong'.
 
@@ -18,3 +18,12 @@ _________
 
 1. To run all Jasmine Spec files :
   npm test
+
+
+Local Build
+___________
+
+1.  To perform a local build :
+  npm run build
+2.  If successful, your app will be running on port 3000.
+3.  Check it by making a GET request to localhost:3000/ping. The response should be 'Pong'.
