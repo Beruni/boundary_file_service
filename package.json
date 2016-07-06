@@ -9,7 +9,12 @@
     "test": "echo '=> running tests' && ./node_modules/.bin/jasmine-node spec && echo '=> tests passed'",
     "minify:js": "echo '=> minify:js' && uglifyjs ./*.js -o ./dist/js/app.min.js --source-map ./dist/js/app.js.map && echo '=> minify:js completed'",
     "start": "node ./dist/js/app.min.js",
-    "build": "echo 'Running build....' && npm run clean && npm run build:dir && npm run test && npm run minify:js"
+    "build": "echo 'Running build....' && npm run clean && tsc && npm run build:dir && npm run test && npm run minify:js",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "lite": "lite-server",
+    "typings": "typings",
+    "postinstall": "typings install"
   },
   "repository": {
     "type": "git",
@@ -24,6 +29,9 @@
   "devDependencies": {
     "http-server": "^0.9.0",
     "jasmine-node": "^1.14.5",
-    "uglify-js": "^2.7.0"
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2",
+    "uglify-js": "^2.7.0",
+    "typings":"1.3.1"
   }
 }
