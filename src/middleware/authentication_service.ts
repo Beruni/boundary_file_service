@@ -39,7 +39,7 @@ export class AuthenticationService{
   }
 
   userServiceGetCurrentUserParams() {
-    return {method: 'GET', hostname: '127.0.0.1', port: 3001, path: '/current_user', headers: {'Cookie': userTokenCookieName + '=' + this.userToken}};
+    return {method: 'GET', hostname: (process.env.USER_SERVICE_HOST || '127.0.0.1'), port: 3001, path: '/current_user', headers: {'Cookie': userTokenCookieName + '=' + this.userToken}};
   }
 }
 
