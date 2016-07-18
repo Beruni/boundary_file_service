@@ -3,7 +3,8 @@
 'use strict';
 
 import * as express from "express";
-
+import * as cookieParser from 'cookie-parser'
+import * as middleware from './src/middleware'
 var app = express();
 
 app.use(function(req, res, next) {
@@ -11,6 +12,10 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header('Access-Control-Allow-Methods', 'GET');
   next();
+});
+app.use(cookieParser());
+app.use(function(req, res, next) {
+	new middleware.AuthenticationService(req).authenticate(res, next);
 });
 
 app.get("/ping", function(request, response){
