@@ -11,11 +11,11 @@ export class AuthenticationService{
   }
 
   authenticate(response:express.Response, next: any) {
-    var authentication = this;
-    var request = httpClient.request(this.userServiceGetCurrentUserParams(),function(userResponse){
+    response['authentication_service'] = this;
+    var request = httpClient.request(this.userServiceGetCurrentUserParams(response),function(userResponse){
       console.log('Got status: ' + userResponse.statusCode);
       if(userResponse.statusCode == 200) {
-        response['authentication'] = authentication;
+        
         userResponse.on('data', function(userData) {
           console.log('User Data: ' + userData);
           response['userData'] = userData;
@@ -38,8 +38,12 @@ export class AuthenticationService{
     request.end();
   }
 
-  userServiceGetCurrentUserParams() {
-    return {method: 'GET', hostname: (process.env.USER_SERVICE_HOST || '127.0.0.1'), port: 3001, path: '/current_user', headers: {'Cookie': userTokenCookieName + '=' + this.userToken}};
+  userServiceGetCurrentUserParams(response:express.Response) {
+    var discoveryService = response['discovery_service'];
+    var params = discoveryService.serviceParams('user_service');
+    var hostname = params ? params['ServiceAddress'] : '127.0.0.1';
+    var port = params ? params['ServicePort'] : '3000';
+    return {method: 'GET', hostname: hostname, port: port, path: '/current_user', headers: {'Cookie': userTokenCookieName + '=' + this.userToken}};
   }
 }
 
