@@ -5,7 +5,8 @@ dist/
 .idea/*
 *.iml
 typings/*
-*.js
+src/**/*.js
+app.js
 *.js.map
 *.log
 
