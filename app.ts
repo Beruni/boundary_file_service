@@ -15,10 +15,10 @@ app.use(function(req, res, next) {
 });
 app.use(cookieParser());
 
-var serviceDiscovery = new middleware.NodeDiscoveryService();
-app.use(function(req, res, next) {
-  serviceDiscovery.fetchNodeServers(res, next);
-});
+// var serviceDiscovery = new middleware.NodeDiscoveryService();
+// app.use(function(req, res, next) {
+//   serviceDiscovery.fetchNodeServers(res, next);
+// });
 
 app.use(function(req, res, next) {
 	new middleware.AuthenticationService(req).authenticate(res, next);
