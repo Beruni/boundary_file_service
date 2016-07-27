@@ -3,45 +3,51 @@ import * as httpClient from 'http';
 
 const user_token = 'authorization';
 
-export class AuthenticationService{  
-  userToken: string;
-  constructor(request: express.Request) {
-    this.userToken = request.headers[user_token];
-  }
+export class AuthenticationService {
+    private userToken;
 
-  authenticate(response:express.Response, next: any) {
-    response['authentication_service'] = this;
-    var request = httpClient.request(this.userServiceGetCurrentUserParams(response),function(userResponse){
-      console.log('Got status: ' + userResponse.statusCode);
-      if(userResponse.statusCode == 200) {
-        userResponse.on('data', function(userData) {
-          console.log('User Data: ' + userData);
-          response['userData'] = userData;
-          next(); 
+    constructor(request:express.Request) {
+        this.userToken = request.headers[user_token];
+    }
+
+    authenticate(response: express.Response, next: any) {
+        response['authentication_service'] = this;
+        var request = httpClient.request(this.userServiceGetCurrentUserParams(response), (userResponse) => {
+            console.log('Got status: ' + userResponse.statusCode);
+            if (userResponse.statusCode == 200) {
+                userResponse.on('data', (userData) => {
+                    console.log('User Data: ' + userData);
+                    response['userData'] = userData;
+                    next();
+                });
+            } else {
+                response.writeHead(userResponse.statusCode);
+                response.end();
+            }
+        }).on('error', function (error) {
+            console.log('Got error: ' + error.message);
+            response.writeHead(403);
+            if (process.env.NODE_ENV != 'production') {
+                response.end(JSON.stringify(error));
+            } else {
+                response.end();
+            }
         });
-      } else {
-        response.writeHead(userResponse.statusCode);  
-        response.end();
-      }
-      // userResponse.resume();
-    }).on('error', function(error) {
-        console.log('Got error: ' + error.message);
-        response.writeHead(403);
-        if(process.env.NODE_ENV != 'production') {
-          response.end(JSON.stringify(error));
-        } else {
-          response.end();
-        }
-    });
-    request.end();
-  }
+        request.end();
+    }
 
-  userServiceGetCurrentUserParams(response:express.Response) {
-    var discoveryService = response['discovery_service'];
-    var params = discoveryService.serviceParams('user_service');
-    var hostname = params ? params['ServiceAddress'] : '127.0.0.1';
-    var port = params ? params['ServicePort'] : '3000';
-    return {method: 'GET', hostname: hostname, port: port, path: '/current_user', headers: {"authorization" : this.userToken}};
-  }
+    userServiceGetCurrentUserParams(response: express.Response) {
+        var discoveryService = response['discovery_service'];
+        var params = discoveryService.serviceParams('user_service');
+        var hostname = params ? params['ServiceAddress'] : '127.0.0.1';
+        var port = params ? params['ServicePort'] : '3002';
+        return {
+            method: 'GET',
+            hostname: hostname,
+            port: port,
+            path: '/current_user',
+            headers: { "authorization": this.userToken }
+        };
+    }
 }
 

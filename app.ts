@@ -1,34 +1,33 @@
-///<reference path="typings/index.d.ts"/>
-
-'use strict';
-
 import * as express from "express";
-import * as cookieParser from 'cookie-parser'
-import * as middleware from './src/middleware'
+import * as bodyParser from "body-parser";
+import * as multer from "multer";
+
 var app = express();
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'GET');
-  next();
-});
-app.use(cookieParser());
+app.set('port', process.env.PORT || '3002');
+app.use(bodyParser.json());
 
-var serviceDiscovery = new middleware.NodeDiscoveryService();
-app.use(function(req, res, next) {
-  serviceDiscovery.fetchNodeServers(res, next);
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods', 'GET, POST');
+    next();
 });
 
-app.use(function(req, res, next) {
-	new middleware.AuthenticationService(req).authenticate(res, next);
+// var serviceDiscovery = new middleware.NodeDiscoveryService();
+// app.use(function(req, res, next) {
+//     serviceDiscovery.fetchNodeServers(res, next);
+// });
+//
+// app.use(function(req, res, next) {
+//     new middleware.AuthenticationService(req).authenticate(res, next);
+// });
+
+var uploadConfig = multer({ dest: "./uploads" });
+
+app.post("/upload", uploadConfig.single('upl'), (req: express.Request, res: express.Response) => {
+    console.log(req.file);
+    res.status(204).end();
 });
 
-app.get("/ping", function(request, response){
-    response.writeHead(200, {"Content-Type" : "text/plain"});
-    response.end("Pong");
-});
-
-
-
-app.listen("3000")
+app.listen(app.get('port'));
