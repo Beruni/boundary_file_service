@@ -7,8 +7,9 @@
     "clean": "rm -rf dist",
     "build:dir": "mkdir -p ./dist/js",
     "test": "echo '=> running tests' && ./node_modules/.bin/jasmine-node spec && echo '=> tests passed'",
-    "minify:js": "npm run minify:middleware && npm run minify:app",
+    "minify:js": "npm run minify:middleware && npm run minify:app && npm run minify:models",
     "minify:middleware": "echo '=> minify:middleware' && mkdir -p ./dist/js/src/ && mv ./src/middleware/index.js ./src/middleware/index.js.tmp && uglifyjs ./src/middleware/*.js -o ./dist/js/src/middleware.js --source-map ./dist/js/src/middleware.js.map && mv ./src/middleware/index.js.tmp ./src/middleware/index.js && echo '=> minify:middleware completed'",
+    "minify:models": "echo '=> minify:models' && mkdir -p ./dist/js/src/models && mv ./src/models/index.js ./src/models/index.js.tmp && uglifyjs ./src/models/*.js -o ./dist/js/src/models/index.js --source-map ./dist/js/src/models/index.js.map && mv ./src/models/index.js.tmp ./src/models/index.js && echo '=> minify:models completed'",
     "minify:app": "echo '=> minify:app' && uglifyjs ./*.js -o ./dist/js/app.min.js --source-map ./dist/js/app.js.map && echo '=> minify:app completed'",
     "start": "node ./dist/js/app.min.js",
     "build": "echo 'Running build....' && npm run clean && npm install && tsc && npm run build:dir && npm run test && npm run minify:js",
@@ -26,6 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "es6-promise": "^3.2.1",
     "express": "^4.14.0",
     "gridfs-stream": "^1.1.1",
     "mongodb": "^2.1.18",
