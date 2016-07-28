@@ -4,7 +4,7 @@ import * as multer from "multer";
 
 var app = express();
 
-app.set('port', process.env.PORT || '3002');
+app.set('port', process.env.PORT || '3000');
 app.use(bodyParser.json());
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {

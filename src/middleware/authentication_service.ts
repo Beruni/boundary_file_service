@@ -40,7 +40,7 @@ export class AuthenticationService {
         var discoveryService = response['discovery_service'];
         var params = discoveryService.serviceParams('user_service');
         var hostname = params ? params['ServiceAddress'] : '127.0.0.1';
-        var port = params ? params['ServicePort'] : '3002';
+        var port = params ? params['ServicePort'] : '3000';
         return {
             method: 'GET',
             hostname: hostname,
