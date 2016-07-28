@@ -25,9 +25,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.14.0",
-    "mongodb": "^2.1.18",
     "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "gridfs-stream": "^1.1.1",
+    "mongodb": "^2.1.18",
+    "mongoose": "^4.5.3",
     "multer": "^1.1.0"
   },
   "devDependencies": {
