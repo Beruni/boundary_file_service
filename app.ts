@@ -5,6 +5,7 @@ import * as mongoose from 'mongoose';
 import * as gridfs from 'gridfs-stream';
 import * as fs from 'fs';
 import {BoundaryFile} from "./src/models";
+import * as JSONStream from "JSONStream";
 
 var app = express();
 
@@ -34,8 +35,7 @@ var uploadConfig = multer({dest: "./uploads"});
 app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, res:express.Response) => {
     var gfs = gridfs(mongoose.connection.db, mongoose.mongo);
     var writeStream = gfs.createWriteStream();
-
-    fs.createReadStream(req.file.path).pipe(writeStream);
+    fs.createReadStream(req.file.path).pipe(JSONStream.parse("")).on("error", e => res.status(500).send("Invalid JSON")).pipe(writeStream);
     writeStream.on('close', file => {
         var tags = req.body.tags.split(",");
         new BoundaryFile().save(req.body.title, tags, file._id)

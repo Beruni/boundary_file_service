@@ -4,6 +4,7 @@
     "express": "registry:dt/express#4.0.0+20160708185218",
     "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20160715232503",
     "gridfs-stream": "registry:dt/gridfs-stream#0.5.0+20160317120654",
+    "jsonstream": "registry:dt/jsonstream#0.8.0+20160316155526",
     "mime": "registry:dt/mime#0.0.0+20160316155526",
     "multer": "registry:dt/multer#0.0.0+20160317120654",
     "node": "registry:dt/node#6.0.0+20160720070758",
