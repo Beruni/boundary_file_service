@@ -34,14 +34,17 @@ var uploadConfig = multer({dest: "./uploads"});
 app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, res:express.Response) => {
     var gfs = gridfs(mongoose.connection.db, mongoose.mongo);
     var writeStream = gfs.createWriteStream();
+
     fs.createReadStream(req.file.path).pipe(writeStream);
     writeStream.on('close', file => {
-        new BoundaryFile().save(req.body.title, file._id)
+        var tags = req.body.tags.split(",");
+        new BoundaryFile().save(req.body.title, tags, file._id)
             .then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
 
     });
 
     writeStream.on('error', e => res.status(500).send("Could not upload file"));
+
 });
 
 mongoose.connect('mongodb://' + app.get('mongo_host') + '/beruni_boundary_files');
