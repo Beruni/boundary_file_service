@@ -27,3 +27,9 @@ ___________
   npm run build
 2.  If successful, your app will be running on port 3000.
 3.  Check it by making a GET request to localhost:3000/ping. The response should be 'Pong'.
+
+Common issues :
+-----------
+1. typings cannot find module
+'npm install typings' is putting typings module but not making entry in typings.json
+using './node_modules/typings/dist/bin.js' to install the typing. 
