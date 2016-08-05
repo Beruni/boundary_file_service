@@ -35,12 +35,17 @@ var uploadConfig = multer({dest: "./uploads"});
 app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, res:express.Response) => {
     var gfs = gridfs(mongoose.connection.db, mongoose.mongo);
     var writeStream = gfs.createWriteStream();
-    fs.createReadStream(req.file.path).pipe(JSONStream.parse("")).on("error", e => res.status(500).send("Invalid JSON")).pipe(writeStream);
+
+    var readStream = fs.createReadStream(req.file.path).pipe(JSONStream.parse(""));
+    readStream.on("close", ()=> {
+        fs.createReadStream(req.file.path).pipe(writeStream);
+    });
+
+    readStream.on("error", e => res.status(500).send("Invalid JSON"));
+
     writeStream.on('close', file => {
         var tags = req.body.tags.split(",");
-        new BoundaryFile().save(req.body.title, tags, file._id)
-            .then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
-
+        new BoundaryFile().save(req.body.title, tags, file._id).then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
     });
 
     writeStream.on('error', e => res.status(500).send("Could not upload file"));
