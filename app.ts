@@ -48,13 +48,9 @@ app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, r
 
     writeStream.on('close', file => {
         var tags = req.body.tags.split(",");
-<<<<<<< Updated upstream
-        new BoundaryFile().save(req.body.title, tags, file._id).then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
-=======
         new BoundaryFile().save(userId,req.body.title, tags, file._id)
             .then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
 
->>>>>>> Stashed changes
     });
 
     writeStream.on('error', e => res.status(500).send("Could not upload file"));
