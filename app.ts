@@ -5,6 +5,7 @@ import * as mongoose from 'mongoose';
 import * as gridfs from 'gridfs-stream';
 import * as fs from 'fs';
 import {BoundaryFile} from "./src/models";
+import {AuthenticationService} from './src/middleware/authentication_service';
 import * as JSONStream from "JSONStream";
 
 var app = express();
@@ -26,13 +27,15 @@ app.use((req:express.Request, res:express.Response, next:express.NextFunction) =
 //     serviceDiscovery.fetchNodeServers(res, next);
 // });
 //
-// app.use(function(req, res, next) {
-//     new middleware.AuthenticationService(req).authenticate(res, next);
-// });
+
+app.use(function(req, res, next) {
+    new AuthenticationService(req).authenticate(res, next);
+});
 
 var uploadConfig = multer({dest: "./uploads"});
 
 app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, res:express.Response) => {
+    var userId = req['decoded']['_id'];
     var gfs = gridfs(mongoose.connection.db, mongoose.mongo);
     var writeStream = gfs.createWriteStream();
 
@@ -45,12 +48,22 @@ app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, r
 
     writeStream.on('close', file => {
         var tags = req.body.tags.split(",");
+<<<<<<< Updated upstream
         new BoundaryFile().save(req.body.title, tags, file._id).then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
+=======
+        new BoundaryFile().save(userId,req.body.title, tags, file._id)
+            .then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
+
+>>>>>>> Stashed changes
     });
 
     writeStream.on('error', e => res.status(500).send("Could not upload file"));
 
 });
+
+app.get("/fetchFiles", function(request, response){
+  console.log("headers = ", request['headers'])
+})
 
 mongoose.connect('mongodb://' + app.get('mongo_host') + '/beruni_boundary_files');
 
