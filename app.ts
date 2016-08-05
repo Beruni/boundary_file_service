@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import {BoundaryFile} from "./src/models";
 import {AuthenticationService} from './src/middleware/authentication_service';
 import * as JSONStream from "JSONStream";
+import { decode } from "jsonwebtoken";
 
 var app = express();
 
@@ -15,10 +16,12 @@ app.set('mongo_host', process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost');
 
 app.use(bodyParser.json());
 
+
 app.use((req:express.Request, res:express.Response, next:express.NextFunction) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header('Access-Control-Allow-Methods', 'GET, POST');
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Auth-Token, authorization");
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Credentials', 'authorization');
     next();
 });
 
@@ -29,13 +32,17 @@ app.use((req:express.Request, res:express.Response, next:express.NextFunction) =
 //
 
 app.use(function(req, res, next) {
-    new AuthenticationService(req).authenticate(res, next);
+    if (req.method == 'OPTIONS') {
+        next()
+    } else {
+        new AuthenticationService(req).authenticate(res, next);
+    }
 });
 
 var uploadConfig = multer({dest: "./uploads"});
 
 app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, res:express.Response) => {
-    var userId = req['decoded']['_id'];
+    var user = decode(req.headers['authorization']);
     var gfs = gridfs(mongoose.connection.db, mongoose.mongo);
     var writeStream = gfs.createWriteStream();
 
@@ -48,7 +55,7 @@ app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, r
 
     writeStream.on('close', file => {
         var tags = req.body.tags.split(",");
-        new BoundaryFile().save(userId,req.body.title, tags, file._id)
+        new BoundaryFile().save(user.id,req.body.title, tags, file._id)
             .then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
 
     });
@@ -59,6 +66,7 @@ app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, r
 
 app.get("/fetchFiles", function(request, response){
   console.log("headers = ", request['headers'])
+    response.end();
 })
 
 mongoose.connect('mongodb://' + app.get('mongo_host') + '/beruni_boundary_files');

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "es6-promise": "registry:npm/es6-promise#3.0.0+20160723033700",
+    "jsonwebtoken": "registry:npm/jsonwebtoken#5.5.4+20160208220328",
     "mongodb": "registry:npm/mongodb#2.1.0+20160721204323",
     "mongoose": "registry:npm/mongoose#4.3.5+20160628072220"
   }

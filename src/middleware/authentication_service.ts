@@ -10,14 +10,12 @@ export class AuthenticationService {
         this.userToken = request.headers[user_token];
     }
 
-    authenticate(response: express.Response, next: any) {
-      console.log("==================================",this.userToken)
+    authenticate(response:express.Response, next:any) {
         // response['authentication_service'] = this;
         var request = httpClient.request(this.userServiceGetCurrentUserParams(response), (userResponse) => {
             console.log('Got status: ' + userResponse.statusCode);
             if (userResponse.statusCode == 200) {
                 userResponse.on('data', (userData) => {
-                    console.log('User Data: ' + userData);
                     response['userData'] = userData;
                     next();
                 });
@@ -37,7 +35,7 @@ export class AuthenticationService {
         request.end();
     }
 
-    userServiceGetCurrentUserParams(response: express.Response) {
+    userServiceGetCurrentUserParams(response:express.Response) {
         // var discoveryService = response['discovery_service'];
         // var params = discoveryService.serviceParams('user_service');
         // var hostname = params ? params['ServiceAddress'] : '127.0.0.1';
@@ -47,7 +45,7 @@ export class AuthenticationService {
             hostname: '127.0.0.1',
             port: 3001,
             path: '/current_user',
-            headers: { "authorization": this.userToken }
+            headers: {"authorization": this.userToken}
         };
     }
 }

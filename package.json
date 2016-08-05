@@ -31,6 +31,7 @@
     "es6-promise": "^3.2.1",
     "express": "^4.14.0",
     "gridfs-stream": "^1.1.1",
+    "jsonwebtoken": "^7.1.7",
     "mongodb": "^2.1.18",
     "mongoose": "^4.5.3",
     "multer": "^1.1.0"
