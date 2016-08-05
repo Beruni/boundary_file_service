@@ -55,7 +55,7 @@ app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, r
 
     writeStream.on('close', file => {
         var tags = req.body.tags.split(",");
-        new BoundaryFile().save(user.id,req.body.title, tags, file._id)
+        new BoundaryFile().save(user['id'],req.body.title, tags, file._id)
             .then(boundaryFileId => res.status(200).send({fileId: boundaryFileId}));
 
     });
@@ -65,9 +65,11 @@ app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, r
 });
 
 app.get("/fetchFiles", function(request, response){
-  console.log("headers = ", request['headers'])
-    response.end();
-})
+    var user = decode(request.headers['authorization']);
+    new BoundaryFile().fetch(user.id,(files) => {
+        response.end(JSON.stringify(files));
+    });
+});
 
 mongoose.connect('mongodb://' + app.get('mongo_host') + '/beruni_boundary_files');
 

@@ -3,7 +3,7 @@ import {Promise} from "es6-promise";
 
 
 var boundaryFileSchema = new mongoose.Schema({
-    "userId" : Object,
+    "user_id" : String,
     "title"  : String,
     "fileId" : String,
     "tags"   : {type: [String], index: true}
@@ -16,10 +16,20 @@ var model = mongoose.model('BoundaryFile', boundaryFileSchema);
 
 export class BoundaryFile {
   
-    save(userId: Object, title:string, tags: [string] ,fileId:string):Promise<string> {
-        var newRecord = new model({"title": title, "fileId": fileId, "tags": tags});
+    save(userId:string, title:string, tags: [string] ,fileId:string):Promise<string> {
+        var newRecord = new model({"user_id":userId, "title": title, "fileId": fileId, "tags": tags});
         return new Promise<string>((resolve, reject) => {
             newRecord.save((err, file) => resolve(file['_id']));
         });
+    }
+
+
+    fetch(userId:string,callback){
+        model.find(userId,function (err, files) {
+            if(err){
+                console.error(err.message);
+            }
+            callback(files);
+        })
     }
 }
