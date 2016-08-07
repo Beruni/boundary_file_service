@@ -6,7 +6,8 @@ var boundaryFileSchema = new mongoose.Schema({
     "user_id" : String,
     "title"  : String,
     "fileId" : String,
-    "tags"   : {type: [String], index: true}
+    "tags"   : {type: [String], index: true},
+    "time" : { type : Date, default: Date.now }
 });
 
 
