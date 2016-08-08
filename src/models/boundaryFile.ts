@@ -31,6 +31,6 @@ export class BoundaryFile {
                 console.error(err.message);
             }
             callback(files);
-        })
+        }).sort([['_id', -1]]);
     }
 }
