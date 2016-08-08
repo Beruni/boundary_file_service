@@ -5,7 +5,7 @@ import * as mongoose from 'mongoose';
 import * as gridfs from 'gridfs-stream';
 import * as fs from 'fs';
 import {BoundaryFile} from "./src/models";
-import {AuthenticationService} from './src/middleware/authentication_service';
+import {AuthenticationService} from './src/middleware';
 import * as JSONStream from "JSONStream";
 import { decode } from "jsonwebtoken";
 
