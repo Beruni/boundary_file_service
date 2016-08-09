@@ -51,7 +51,7 @@ app.post("/upload", uploadConfig.single('boundaryFile'), (req:express.Request, r
         fs.createReadStream(req.file.path).pipe(writeStream);
     });
 
-    readStream.on("error", e => res.status(500).send("Invalid JSON"));
+    readStream.on("error", e => res.status(406).send("Invalid JSON!"));
 
     writeStream.on('close', file => {
         var tags = req.body.tags.split(",");
