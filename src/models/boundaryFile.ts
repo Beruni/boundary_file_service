@@ -24,7 +24,6 @@ export class BoundaryFile {
         });
     }
 
-
     fetch(userId:string,callback){
         model.find(userId,function (err, files) {
             if(err){
@@ -33,4 +32,5 @@ export class BoundaryFile {
             callback(files);
         }).sort([['_id', -1]]);
     }
+
 }

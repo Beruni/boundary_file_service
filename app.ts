@@ -71,6 +71,23 @@ app.get("/fetchFiles", function(request, response){
     });
 });
 
+app.get("/fetchFile/:fileId", function(request, response){
+    var gfs = gridfs(mongoose.connection.db, mongoose.mongo);
+    var fileId = request.param('fileId').slice(1);
+    var readStream = gfs.createReadStream({
+        _id: fileId
+    });
+
+    readStream.on('data',(data) => {
+        data += data;
+        response.status(200).end(JSON.stringify(data));
+    })
+
+    readStream.on('error',e => {
+        response.status(500).end(JSON.stringify(e.message));
+    })
+});
+
 mongoose.connect('mongodb://' + app.get('mongo_host') + '/beruni_boundary_files');
 
 app.listen(app.get('port'));
