@@ -73,7 +73,7 @@ app.get("/fetchFiles", function(request, response){
 
 app.get("/fetchFile/:fileId", function(request, response){
     var gfs = gridfs(mongoose.connection.db, mongoose.mongo);
-    var fileId = request.param('fileId').slice(1);
+    var fileId = request.param('fileId');
     var readStream = gfs.createReadStream({
         _id: fileId
     });
