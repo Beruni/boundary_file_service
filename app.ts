@@ -77,10 +77,14 @@ app.get("/fetchFile/:fileId", function(request, response){
     var readStream = gfs.createReadStream({
         _id: fileId
     });
+    var content = "";
 
     readStream.on('data',(data) => {
-        data += data;
-        response.status(200).end(JSON.stringify(data));
+        content += data;
+    })
+
+    readStream.on('close',()=>{
+        response.status(200).end(JSON.stringify(content));
     })
 
     readStream.on('error',e => {
