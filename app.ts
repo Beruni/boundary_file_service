@@ -12,7 +12,10 @@ import { decode } from "jsonwebtoken";
 var app = express();
 
 app.set('port', process.env.PORT || '3000');
-app.set('mongo_host', process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost');
+var mongo_fallback_host = process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost';
+var mongo_fallback_url = 'mongodb://'+ mongo_fallback_host +'/beruni_boundary_files';
+
+app.set('mongo_url', process.env.MONGODB_URI || mongo_fallback_url);
 
 app.use(bodyParser.json());
 
@@ -91,6 +94,6 @@ app.get("/fetchFile/:fileId", function(request, response){
     })
 });
 
-mongoose.connect('mongodb://' + app.get('mongo_host') + '/beruni_boundary_files');
+mongoose.connect(app.get('mongo_url'));
 
 app.listen(app.get('port'));
